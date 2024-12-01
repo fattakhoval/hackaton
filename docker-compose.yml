@@ -1,0 +1,43 @@
+services:
+  web_app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: [ "poetry", "run", "python", "main.py" ]
+    restart: unless-stopped
+    depends_on:
+      - web_db
+    ports:
+      - "8485:8485"
+    networks:
+      - app_network
+
+  web_db:
+    image: postgres:alpine3.20
+    env_file:
+      - ./backend/pg.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - psql_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - app_network
+    depends_on:
+      - web_app
+
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  psql_data:
