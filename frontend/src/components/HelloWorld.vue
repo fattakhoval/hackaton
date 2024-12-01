@@ -122,9 +122,7 @@ export default {
 };
 </script>
 
-<style scoped>
-/* Ваши стили */
-</style>
+
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
