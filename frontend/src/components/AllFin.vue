@@ -116,29 +116,47 @@ export default {
       });
     },
     deleteTransaction(id) {
-      this.transactions = this.transactions.filter(transaction => transaction.id !== id);
-      console.log(`Транзакция с ID ${id} удалена`);
-    },
+      // Отправляем запрос на удаление транзакции на сервер
+      fetch(`http://localhost:8485/transactions/${id}`, { // Замените на реальный URL вашего API
+        method: 'DELETE',
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Ошибка при удалении транзакции');
+          }
+          // Удаляем транзакцию из локального массива, если удаление на сервере прошло успешно
+          this.transactions = this.transactions.filter(transaction => transaction.id !== id);
+          console.log(`Транзакция с ID ${id} удалена`);
+        })
+        .catch(error => {
+          console.error('Ошибка при удалении транзакции:', error);
+        });
+    }
   },
 };
 </script>
-  
-  
-  <style scoped>
-  .container {
-    max-width: 800px; /* Ограничиваем ширину контейнера */
-  }
-  
-  h1 {
-    font-size: 2rem; /* Увеличиваем размер заголовка */
-    color: #333; /* Цвет заголовка */
-  }
-  
-  .table {
-    margin-top: 20px; /* Добавляем отступ сверху для таблицы */
-  }
-  
-  .btn-info {
-    margin-top: 0; /* Убираем верхний отступ для кнопки фильтрации */
-  }
-  </style>
+
+
+<style scoped>
+.container {
+  max-width: 800px;
+  /* Ограничиваем ширину контейнера */
+}
+
+h1 {
+  font-size: 2rem;
+  /* Увеличиваем размер заголовка */
+  color: #333;
+  /* Цвет заголовка */
+}
+
+.table {
+  margin-top: 20px;
+  /* Добавляем отступ сверху для таблицы */
+}
+
+.btn-info {
+  margin-top: 0;
+  /* Убираем верхний отступ для кнопки фильтрации */
+}
+</style>

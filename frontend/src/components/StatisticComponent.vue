@@ -49,14 +49,40 @@ export default {
   },
   methods: {
     generateReport() {
-      // Здесь вы можете добавить логику для расчета доходов и расходов
-      // Для примера, мы просто зададим фиксированные значения
-      this.totalIncome = 1000; // Замените на реальную логику
-      this.totalExpense = 500; // Замените на реальную логику
-      this.reportGenerated = true;
+      // Проверяем, что даты указаны
+      if (!this.startDate || !this.endDate) {
+        alert('Пожалуйста, укажите начальную и конечную даты.');
+        return;
+      }
 
-      // Генерация графика
-      this.createChart();
+      // Запрос на сервер для получения транзакций за указанный период
+      fetch(`http://localhost:8485/transactions?startDate=${this.startDate}&endDate=${this.endDate}`) // Замените на реальный URL вашего API
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Ошибка при загрузке транзакций');
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.calculateTotals(data); // Вызываем метод для расчета итогов
+          this.reportGenerated = true; // Устанавливаем флаг, что отчет сгенерирован
+          this.createChart(); // Генерируем график
+        })
+        .catch(error => {
+          console.error('Ошибка при генерации отчета:', error);
+        });
+    },
+    calculateTotals(transactions) {
+      this.totalIncome = 0;
+      this.totalExpense = 0;
+
+      transactions.forEach(transaction => {
+        if (transaction.type === 'income') {
+          this.totalIncome += transaction.amount; // Суммируем доходы
+        } else if (transaction.type === 'expense') {
+          this.totalExpense += transaction.amount; // Суммируем расходы
+        }
+      });
     },
     createChart() {
       const ctx = this.$refs.expenseChart.getContext('2d');
@@ -87,6 +113,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .container {
