@@ -112,7 +112,12 @@ export default {
       })
       .then(data => {
         console.log('Sign in successful:', data);
-        // Здесь можно добавить логику для обработки успешного входа
+        const { access_token, refresh_token } = data;
+
+        // Устанавливаем токены в куки
+        document.cookie = `access_token=${access_token}; path=/; secure; samesite=None;`;
+        document.cookie = `refresh_token=${refresh_token}; path=/; secure; samesite=None;`;
+        console.log("Tokens set in cookies");
       })
       .catch(error => {
         console.error('There was a problem with the signin request:', error);
