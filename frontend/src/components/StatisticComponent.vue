@@ -77,9 +77,10 @@ export default {
       this.totalExpense = 0;
 
       transactions.forEach(transaction => {
-        if (transaction.type === 'income') {
+        console.log(transaction)
+        if (transaction.category_type === 'приход') {
           this.totalIncome += transaction.amount; // Суммируем доходы
-        } else if (transaction.type === 'expense') {
+        } else if (transaction.category_type === 'расход') {
           this.totalExpense += transaction.amount; // Суммируем расходы
         }
       });

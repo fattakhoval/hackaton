@@ -42,7 +42,7 @@
           </div>
         </div>
       </div>
-      <div class="col py-3">
+      <div class="">
         <router-view /> <!-- Здесь будут отображаться компоненты -->
       </div>
     </div>

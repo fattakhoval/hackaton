@@ -6,7 +6,7 @@ from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, String, DateTime, Boolean, Float, Enum, func
+from sqlalchemy import ForeignKey, String, DateTime, Boolean, Float, Enum, func, select
 
 from src.database.crud import BaseCRUD
 
@@ -85,15 +85,17 @@ class Transaction(BaseCRUD):
     short_description: Mapped[str] = mapped_column(String(256), nullable=True)
 
     user: Mapped['User'] = relationship(back_populates='transactions')
-    category: Mapped['Category'] = relationship("Category", back_populates='transactions', lazy='select')
+    category: Mapped['Category'] = relationship("Category", back_populates='transactions', lazy='joined')
 
     def to_dict(self):
         return {
             "id": str(self.id),
             "user_id": str(self.user_id),
             "category_id": str(self.category_id),
-            "category_name": self.category.name,
+            "category_name": self.category.name if self.category else None,
+            "category_type": self.category.type.value if self.category else None,
             "amount": self.amount,
+            'date': self.created_at.strftime('%Y-%m-%d'),
             'short_description': self.short_description
         }
 
@@ -102,12 +104,16 @@ class Transaction(BaseCRUD):
 
     @classmethod
     async def get_statistic(cls, asession: AsyncSession, start_date, end_date):
-        statistic = await asession.execute(cls).filter(
-            cls.created_at >= start_date,
-            cls.created_at <= end_date
-        ).all()
+        start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
+        end_date_obj = datetime.strptime(end_date, '%Y-%m-%d')
+        expr = await asession.execute(select(cls).filter(
+            cls.created_at >= start_date_obj,
+            cls.created_at <= end_date_obj
+        ))
 
-        return statistic
+        statistic = expr.scalars().all()
+
+        return [stat.to_dict() for stat in statistic]
 
 
 class Budget(BaseCRUD):

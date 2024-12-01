@@ -12,6 +12,9 @@ class BaseCRUD(DeclarativeBase):
         session.add(new)
         await session.commit()
 
+        if cls.__name__ == "Transaction":
+            await session.refresh(new, attribute_names=["category"])
+
         return new.to_dict()
 
     @classmethod

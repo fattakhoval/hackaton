@@ -14,11 +14,8 @@
             <div class="col">
               <select class="form-control" v-model="filterCategory">
                 <option value="">Все категории</option>
-                <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
+                <option v-for="category in categories" :key="category" :value="category.name">{{ category.name }}</option>
               </select>
-            </div>
-            <div class="col">
-              <button class="btn btn-info" @click="filterTransactions">Фильтровать</button>
             </div>
           </div>
 
@@ -34,7 +31,7 @@
             <tbody>
               <tr v-for="transaction in filteredTransactions" :key="transaction.id">
                 <td>{{ transaction.date }}</td>
-                <td>{{ transaction.category }}</td>
+                <td>{{ transaction.category_name }}</td>
                 <td>{{ transaction.amount }}</td>
                 <td>
                   <button class="btn btn-danger" @click="deleteTransaction(transaction.id)">Удалить</button>
@@ -72,7 +69,7 @@ export default {
     filteredTransactions() {
       return this.transactions.filter(transaction => {
         const matchesDate = this.filterDate ? transaction.date === this.filterDate : true;
-        const matchesCategory = this.filterCategory ? transaction.category === this.filterCategory : true;
+        const matchesCategory = this.filterCategory ? transaction.category_name === this.filterCategory : true;
         return matchesDate && matchesCategory;
       });
     },
@@ -107,33 +104,32 @@ export default {
         });
     },
     fetchCategories() {
-        const getCookie = (name) => {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    };
-    const accessToken = getCookie('access_token');
-      fetch('http:/localhost:8485/categories', {
+          const getCookie = (name) => {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        };
+        const accessToken = getCookie('access_token');
+        fetch('http://localhost:8485/categories', {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
         }
     })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then(data => {
-            console.log(data);
-          this.categories = data; // Предполагается, что сервер возвращает массив категорий
-        })
-        .catch(error => {
-          console.error('Ошибка при загрузке категорий:', error);
-        });
-    },
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            this.categories = data; // Предполагается, что сервер возвращает массив категорий
+          })
+          .catch(error => {
+            console.error('Ошибка при загрузке категорий:', error);
+          });
+      },
     filterTransactions() {
       // Логика фильтрации уже реализована в computed свойстве filteredTransactions
       console.log('Фильтры применены:', {
@@ -142,9 +138,18 @@ export default {
       });
     },
     deleteTransaction(id) {
-      // Отправляем запрос на удаление транзакции на сервер
+      const getCookie = (name) => {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        };
+        const accessToken = getCookie('access_token');
       fetch(`http://localhost:8485/transactions/${id}`, { // Замените на реальный URL вашего API
         method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
       })
         .then(response => {
           if (!response.ok) {
