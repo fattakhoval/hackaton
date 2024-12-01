@@ -1,0 +1,33 @@
+import uvicorn
+import asyncio
+
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
+
+from src.routes.auth import auth_route
+# from src.routes.user import user
+from src.routes.category import category_route
+from src.routes.transaction import transaction_route
+from src.database.db_settings import engine
+from src.database.models import BaseCRUD
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    async with engine.begin() as conn:
+        await conn.run_sync(BaseCRUD.metadata.create_all)
+    yield
+
+app = FastAPI(lifespan=lifespan)
+
+app.include_router(auth_route)
+app.include_router(category_route)
+app.include_router(transaction_route)
+
+
+if __name__ == '__main__':
+
+    uvicorn_config = uvicorn.Config(app, host='0.0.0.0', port=8485)
+    server = uvicorn.Server(uvicorn_config)
+
+    asyncio.run(server.serve())
