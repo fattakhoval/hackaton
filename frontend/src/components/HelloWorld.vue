@@ -71,7 +71,7 @@ export default {
       console.log('Signing up with:', this.signupForm);
 
       // Отправка данных на сервер
-      fetch('http://localhost/signup', {
+      fetch('http://localhost:8485/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ export default {
       console.log('Signing in with:', this.signinForm);
 
       // Отправка данных на сервер
-      fetch('https://your-api-endpoint.com/signin', {
+      fetch('http://localhost:8485/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
