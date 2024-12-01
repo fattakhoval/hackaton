@@ -11,7 +11,7 @@ import StatisticComponent from '@/components/StatisticComponent.vue';
 const routes = [
   
   { path: '/', component: HelloWorld },
-  { path: '/allfin', component: AllFin },
+  { path: '/allfin', name: 'allfin', component: AllFin },
   { path: '/AddFin', component: AddFin },
   { path: '/StatisticComponent', component: StatisticComponent },
 ];

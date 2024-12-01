@@ -79,7 +79,20 @@ export default {
   },
   methods: {
     fetchTransactions() {
-      fetch('http://localhost:8485/all_transaction')
+      const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    };
+    const accessToken = getCookie('access_token');
+    console.log(`AAAA TOKEN ${accessToken}`);
+      fetch('http://localhost:8485/all_transaction', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    })
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -94,7 +107,19 @@ export default {
         });
     },
     fetchCategories() {
-      fetch('http:/localhost:8485/categories') // Замените на реальный URL вашего API
+        const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    };
+    const accessToken = getCookie('access_token');
+      fetch('http:/localhost:8485/categories', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    })
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -102,6 +127,7 @@ export default {
           return response.json();
         })
         .then(data => {
+            console.log(data);
           this.categories = data; // Предполагается, что сервер возвращает массив категорий
         })
         .catch(error => {

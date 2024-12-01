@@ -4,6 +4,7 @@ from typing import List
 from enum import Enum as PyEnum
 from datetime import datetime
 
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, String, DateTime, Boolean, Float, Enum, func
 
@@ -34,6 +35,13 @@ class User(BaseCRUD):
     budgets: Mapped[List["Budget"]] = relationship(
         back_populates="user", cascade="all, delete-orphan"
     )
+
+    def to_dict(self):
+        return {
+            "id": str(self.id),
+            "name": self.name,
+            "email": self.email
+        }
 
     def __str__(self):
         return f"<User(id={self.id}, name={self.name}, email={self.email}, is_active={self.is_active})>"
@@ -77,19 +85,29 @@ class Transaction(BaseCRUD):
     short_description: Mapped[str] = mapped_column(String(256), nullable=True)
 
     user: Mapped['User'] = relationship(back_populates='transactions')
-    category: Mapped['Category'] = relationship(back_populates='transactions')
+    category: Mapped['Category'] = relationship("Category", back_populates='transactions', lazy='select')
 
     def to_dict(self):
         return {
             "id": str(self.id),
             "user_id": str(self.user_id),
             "category_id": str(self.category_id),
+            "category_name": self.category.name,
             "amount": self.amount,
             'short_description': self.short_description
         }
 
     def __str__(self):
         return f"<Transaction(id={self.id}, amount={self.amount}, category={self.category}, description={self.short_description}, added={self.category})>"
+
+    @classmethod
+    async def get_statistic(cls, asession: AsyncSession, start_date, end_date):
+        statistic = await asession.execute(cls).filter(
+            cls.created_at >= start_date,
+            cls.created_at <= end_date
+        ).all()
+
+        return statistic
 
 
 class Budget(BaseCRUD):

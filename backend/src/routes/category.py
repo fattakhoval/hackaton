@@ -26,7 +26,3 @@ async def add_category(data: NewCategory, asession = Depends(get_session)):
 @category_route.delete('/remove_category')
 async def remove_category():
     pass
-
-@category_route.put('/update_category')
-async def update_category():
-    pass

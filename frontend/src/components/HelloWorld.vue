@@ -118,6 +118,8 @@ export default {
         document.cookie = `access_token=${access_token}; path=/; secure; samesite=None;`;
         document.cookie = `refresh_token=${refresh_token}; path=/; secure; samesite=None;`;
         console.log("Tokens set in cookies");
+
+        this.$router.push("/AllFin");
       })
       .catch(error => {
         console.error('There was a problem with the signin request:', error);

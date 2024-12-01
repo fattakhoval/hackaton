@@ -5,12 +5,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from fastapi.responses import JSONResponse
 
-from src.auth.auth import get_password_hash, verify_password, create_access_token, create_refresh_token, SECRET_KEY, \
-    ALGORITHM
+from src.auth.auth import get_password_hash, verify_password, create_access_token, create_refresh_token
 from src.database.db_settings import get_session
 from src.database.models import User
 from src.database.schemas.token import RefreshTokenRequest
 from src.database.schemas.user import CreateUser, LoginUser
+
+from config import config
 
 auth_route = APIRouter()
 
@@ -50,7 +51,7 @@ async def refresh_token(refresh_token: RefreshTokenRequest, asession: AsyncSessi
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(refresh_token.refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(refresh_token.refresh_token, config.jwt_secret_key, algorithms=[config.algorithm])
         email: str = payload.get("sub")
         if email is None:
             raise credentials_exception

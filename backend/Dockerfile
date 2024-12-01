@@ -1,7 +1,6 @@
 FROM python:3.12.0-slim
 
 WORKDIR /app
-COPY .. /app
 
 RUN apt-get update && apt-get install -y \
     curl \
@@ -10,5 +9,8 @@ RUN apt-get update && apt-get install -y \
     libffi-dev \
     python3-dev
 
+
+COPY .. /app
 RUN pip install poetry
 RUN poetry install
+

@@ -1,24 +1,25 @@
 # hackaton-front
 
-## Project setup
+## Запуск проекта через docker-compose
+
+Для начала нужно переименовать файлы:
+ - example.env -> .env
+ - pg.example.env -> pg.env
+
+И указать в них нужные данные для запуска проета
+
+Устанавливает dokcer, docker-compose
+
+Пишем команду в консоль (если у вас linux)
+
+```shell
+sudo docker compose up --build 
 ```
-npm install
+в зависимости от версии docker команда может быть другой
+```shell
+sudo docker-compose up --build 
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Ждем-с пока проект соберется
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+После можно переходить по ссылке "http://localhost:3000"

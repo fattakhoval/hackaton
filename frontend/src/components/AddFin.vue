@@ -20,7 +20,7 @@
               <div class="form-group mb-3">
                 <select class="form-control" v-model="category" required>
                   <option value="">Выберите категорию</option>
-                  <option v-for="cat in categories" :key="cat.id" :value="cat.name">{{ cat.name }}</option>
+                  <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
                 </select>
               </div>
 
@@ -30,7 +30,7 @@
                   class="form-control"
                   placeholder="Краткое описание"
                   v-model="short_description"
-                  
+
                 />
               </div>
               <button type="submit" class="btn btn-primary btn-block mb-3">Добавить</button>
@@ -62,7 +62,19 @@
     },
     methods: {
       fetchCategories() {
-        fetch('http://localhost:8485/categories') // Замените на реальный URL вашего API
+          const getCookie = (name) => {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        };
+        const accessToken = getCookie('access_token');
+        fetch('http://localhost:8485/categories', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    })
           .then(response => {
             if (!response.ok) {
               throw new Error('Network response was not ok');
@@ -79,17 +91,24 @@
       handleSubmit() {
         const transactionData = {
           amount: this.amount,
-          category: this.category,
+          category_id: this.category,
           short_description: this.short_description,
         };
         this.createTransaction(transactionData); // Вызываем метод для создания транзакции
       },
       createTransaction(transactionData) {
+      const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    };
+    const accessToken = getCookie('access_token');
         fetch('http://localhost:8485/add_transaction', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-          },
+            'Authorization': `Bearer ${accessToken}`, // Заголовок Authorization должен быть здесь
+            'Content-Type': 'application/json' // Добавьте Content-Type, если это необходимо
+        },
           body: JSON.stringify(transactionData),
         })
         .then(response => {
