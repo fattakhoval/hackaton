@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "postgresql+asyncpg://bulk_edit:qweqweqwe@localhost/hakaton_app"
+DATABASE_URL = "postgresql+asyncpg://bulk_edit:qweqweqwe@web_db/hakaton_app"
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 

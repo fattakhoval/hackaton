@@ -23,7 +23,6 @@
                   <option v-for="cat in categories" :key="cat.id" :value="cat.name">{{ cat.name }}</option>
                 </select>
               </div>
-              <input type="hidden" v-model="userId" /> <!-- Скрытое поле для ID пользователя -->
               <button type="submit" class="btn btn-primary btn-block mb-3">Добавить</button>
             </form>
           </div>
@@ -45,7 +44,6 @@
         amount: null,
         category: '',
         categories: [], // Массив для хранения категорий
-        userId: '12345', // Замените на реальный ID авторизованного пользователя
       };
     },
     created() {
@@ -53,7 +51,7 @@
     },
     methods: {
       fetchCategories() {
-        fetch('https://your-api-endpoint.com/categories') // Замените на реальный URL вашего API
+        fetch('http://localhost:8485/categories') // Замените на реальный URL вашего API
           .then(response => {
             if (!response.ok) {
               throw new Error('Network response was not ok');
@@ -70,13 +68,12 @@
       handleSubmit() {
         const transactionData = {
           amount: this.amount,
-          category: this.category,
-          userId: this.userId, // Добавляем ID пользователя в данные транзакции
+          category: this.category
         };
         this.createTransaction(transactionData); // Вызываем метод для создания транзакции
       },
       createTransaction(transactionData) {
-        fetch('https://your-api-endpoint.com/transactions', { // Замените на реальный URL вашего API
+        fetch('http://localhost:8485/add_transaction', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

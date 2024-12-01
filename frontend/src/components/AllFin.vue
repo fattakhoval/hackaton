@@ -79,7 +79,7 @@ export default {
   },
   methods: {
     fetchTransactions() {
-      fetch('https://your-api-endpoint.com/transactions') // Замените на реальный URL вашего API
+      fetch('http://localhost:8485/all_transaction')
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -87,14 +87,14 @@ export default {
           return response.json();
         })
         .then(data => {
-          this.transactions = data; // Предполагается, что сервер возвращает массив транзакций
+          this.transactions = data;
         })
         .catch(error => {
           console.error('Ошибка при загрузке транзакций:', error);
         });
     },
     fetchCategories() {
-      fetch('https://your-api-endpoint.com/categories') // Замените на реальный URL вашего API
+      fetch('http:/localhost:8485/categories') // Замените на реальный URL вашего API
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');

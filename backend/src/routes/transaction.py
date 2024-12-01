@@ -13,7 +13,7 @@ async def get_transaction(transaction_id, asession = Depends(get_session)):
     transaction = await Transaction.get(transaction_id, asession)
     return JSONResponse(status_code=200 if transaction else 400, content=transaction)
 
-@transaction_route.get('/all_transaction/', dependencies=[Depends(verify_token)])
+@transaction_route.get('/all_transaction', dependencies=[Depends(verify_token)])
 async def all_transaction(asession = Depends(get_session)):
     transactions = await Transaction.get_all(asession)
     return JSONResponse(status_code=200 if transactions else 400, content=transactions)
