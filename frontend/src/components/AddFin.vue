@@ -23,6 +23,16 @@
                   <option v-for="cat in categories" :key="cat.id" :value="cat.name">{{ cat.name }}</option>
                 </select>
               </div>
+
+              <div class="form-group mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Краткое описание"
+                  v-model="short_description"
+                  
+                />
+              </div>
               <button type="submit" class="btn btn-primary btn-block mb-3">Добавить</button>
             </form>
           </div>
@@ -43,6 +53,7 @@
       return {
         amount: null,
         category: '',
+        short_description: '',
         categories: [], // Массив для хранения категорий
       };
     },
@@ -68,7 +79,8 @@
       handleSubmit() {
         const transactionData = {
           amount: this.amount,
-          category: this.category
+          category: this.category,
+          short_description: this.short_description,
         };
         this.createTransaction(transactionData); // Вызываем метод для создания транзакции
       },
@@ -97,6 +109,7 @@
       resetForm() {
         this.amount = null;
         this.category = '';
+        this.short_description = '';
       },
     },
   };
