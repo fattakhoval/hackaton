@@ -71,7 +71,7 @@ export default {
       console.log('Signing up with:', this.signupForm);
 
       // Отправка данных на сервер
-      fetch('https://your-api-endpoint.com/signup', {
+      fetch('http://localhost/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
