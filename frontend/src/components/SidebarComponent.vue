@@ -9,7 +9,9 @@
           <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
             <li class="nav-item">
               <router-link to="/" class="nav-link align-middle px-0">
-                <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Выход</span>
+              <li><a class="dropdown-item" href="#" @click="logout">Выход</a></li> <!-- Добавляем пункт для выхода -->
+
+                
               </router-link>
             </li>
             <li>
@@ -33,7 +35,10 @@
             <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
               <img src="https://i.pinimg.com/736x/bb/6b/ba/bb6bbadfe2b4c6c956cd580eca997343.jpg" alt="hugenerd" width="30" height="30" class="rounded-circle">
               <span class="d-none d-sm-inline mx-1">{{ userName }}</span> <!-- Отображаем имя пользователя -->
-            </a>           
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+              <li><a class="dropdown-item" href="#" @click="logout">Выход</a></li> <!-- Добавляем пункт для выхода -->
+            </ul>
           </div>
         </div>
       </div>
@@ -65,10 +70,15 @@ export default {
         this.userName = 'Гость'; // Значение по умолчанию, если cookie не найден
       }
     },
+    logout() {
+      // Удаляем cookie с именем пользователя
+      document.cookie = 'userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'; // Устанавливаем истекшую дату
+      this.userName = 'Гость'; // Сбрасываем имя пользователя
+      this.$router.push('/'); // Перенаправляем на главную страницу или страницу входа
+    },
   },
 };
 </script>
 
-<style scoped>
-/* Добавьте свои стили, если необходимо */
+<style>
 </style>
